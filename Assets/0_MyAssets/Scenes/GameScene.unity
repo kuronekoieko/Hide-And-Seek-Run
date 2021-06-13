@@ -1302,6 +1302,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1222085939}
     m_Modifications:
+    - target: {fileID: 4831290010425665104, guid: eca4bfeb94455044c8d87aa4ae9e6407, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8a1e9d6992b0d440dbd69d52c186d9c8, type: 2}
     - target: {fileID: 4831290010428779320, guid: eca4bfeb94455044c8d87aa4ae9e6407, type: 3}
       propertyPath: m_Name
       value: Stickman
