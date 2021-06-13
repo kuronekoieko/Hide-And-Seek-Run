@@ -1026,6 +1026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1222085942}
+  animator: {fileID: 4831290010117783598}
 --- !u!136 &1222085941
 CapsuleCollider:
   m_ObjectHideFlags: 0

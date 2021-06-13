@@ -13,6 +13,7 @@ public enum PlayerState
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
+    [SerializeField] Animator animator;
     PlayerState playerState;
     float runningSpeed = 5f;
     public static PlayerController i;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        animator.SetBool("IsRunning", playerState == PlayerState.Running);
         switch (playerState)
         {
             case PlayerState.Stop:
