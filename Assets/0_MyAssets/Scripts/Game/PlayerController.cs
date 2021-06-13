@@ -15,6 +15,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Rigidbody rb;
     PlayerState playerState;
     float runningSpeed = 5f;
+    public static PlayerController i;
+
+    private void Awake()
+    {
+        i = this;
+    }
 
     void Start()
     {
