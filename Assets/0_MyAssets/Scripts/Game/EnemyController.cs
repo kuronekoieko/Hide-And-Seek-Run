@@ -35,16 +35,18 @@ public class EnemyController : MonoBehaviour
             case EnemyState.LookingAround:
                 timer += Time.deltaTime;
 
-                if (timer > 1f)
+                if (timer > 2f)
                 {
                     enemyState = EnemyState.Holding;
                     timer = 0f;
 
                     Sequence sequence = DOTween.Sequence()
                     .Append(DOTween.To(() => enemyAnimatorIK.weight, (x) => enemyAnimatorIK.weight = x, 1f, 1.5f).SetEase(Ease.InOutSine))
-                    .Append(DOTween.To(() => vLight.spotRange, (x) => vLight.spotRange = x, 10, 3f).SetEase(Ease.Linear))
+                    .Append(DOTween.To(() => vLight.spotRange, (x) => vLight.spotRange = x, 10, 2f).SetEase(Ease.Linear))
+                    .AppendInterval(0.5f)
                     .OnComplete(() =>
                     {
+                        enemyAnimatorIK.weight = 0;
                         vLight.spotRange = 0;
                         enemyState = EnemyState.LookingAround;
                     });
@@ -52,8 +54,6 @@ public class EnemyController : MonoBehaviour
 
                 break;
             case EnemyState.Holding:
-
-
                 break;
             default:
                 break;
