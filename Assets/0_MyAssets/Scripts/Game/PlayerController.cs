@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator animator;
     [NonSerialized] public PlayerState playerState;
-    [NonSerialized] public float runningSpeed = 5f;
+    [NonSerialized] public float runningSpeed = 7f;
     public static PlayerController i;
 
     private void Awake()
