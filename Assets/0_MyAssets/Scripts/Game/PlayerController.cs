@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum PlayerState
 {
@@ -14,8 +15,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] Animator animator;
-    PlayerState playerState;
-    float runningSpeed = 5f;
+    [NonSerialized] public PlayerState playerState;
+    [NonSerialized] public float runningSpeed = 5f;
     public static PlayerController i;
 
     private void Awake()

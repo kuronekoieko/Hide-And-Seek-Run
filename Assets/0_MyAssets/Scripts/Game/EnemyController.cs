@@ -35,7 +35,7 @@ public class EnemyController : MonoBehaviour
             case EnemyState.LookingAround:
                 timer += Time.deltaTime;
 
-                if (timer > 3f)
+                if (timer > 1f)
                 {
                     enemyState = EnemyState.Holding;
                     timer = 0f;
@@ -52,9 +52,7 @@ public class EnemyController : MonoBehaviour
 
                 break;
             case EnemyState.Holding:
-                var vLightPos = flashLightLensTf.transform.position;
-                vLightPos.z = vLight.transform.position.z;
-                vLight.transform.position = vLightPos;
+
 
                 break;
             default:
