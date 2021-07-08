@@ -42,7 +42,7 @@ public class EnemyController : MonoBehaviour
 
                     Sequence sequence = DOTween.Sequence()
                     .Append(DOTween.To(() => enemyAnimatorIK.weight, (x) => enemyAnimatorIK.weight = x, 1f, 1.5f).SetEase(Ease.InOutSine))
-                    .Append(DOTween.To(() => vLight.spotRange, (x) => vLight.spotRange = x, 10, 2f).SetEase(Ease.Linear))
+                    .Append(DOTween.To(() => vLight.spotRange, (x) => vLight.spotRange = x, 10, 1.5f).SetEase(Ease.Linear))
                     .AppendInterval(0.5f)
                     .OnComplete(() =>
                     {
