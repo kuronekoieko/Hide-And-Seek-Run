@@ -1,5 +1,4 @@
-﻿#if UNITY_IPHONE
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
@@ -13,13 +12,50 @@ public class MyBuildPostprocessor : IPreprocessBuildWithReport
     // 実行順
     public int callbackOrder { get { return 0; } }
 
+    static string releaseBundleIdentifier;
+    static string releaseBundleDisplayName;
+
+    // ビルド前処理
     public void OnPreprocessBuild(BuildReport report)
     {
+        Debug.Log("OnPreprocessBuild");
+        releaseBundleIdentifier = PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
+
+        // ビルド時に一時的にPlayerSettingを変更し、ビルド後に戻す
+        // androidでのポストプロセスが実装できなかったため、この方法ならOSに関わらず実装できる
+        if (EditorUserBuildSettings.development)
+        {
+            releaseBundleDisplayName = PlayerSettings.productName;
+
+            string dateName = DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2");
+
+            string debugBundleDisplayName = $"{dateName}_{releaseBundleDisplayName}";
+            string debugBundleIdentifier = releaseBundleIdentifier + ".dev";
+
+            PlayerSettings.productName = debugBundleDisplayName;
+            // PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, debugBundleIdentifier);
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, debugBundleIdentifier);
+        }
     }
 
     [PostProcessBuild]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string path)
     {
+        Debug.Log("OnPostProcessBuild buildTarget : " + buildTarget);
+        if (EditorUserBuildSettings.development)
+        {
+            PlayerSettings.productName = releaseBundleDisplayName;
+            // PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, releaseBundleIdentifier);
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, releaseBundleIdentifier);
+        }
+        // PostProcessBuild後の保存が自動でされず、gitの変更にPreprocessBuildの変更が出てしまうため
+        AssetDatabase.SaveAssets();
+    }
+
+    static void IOS(BuildTarget buildTarget, string path)
+    {
+        if (buildTarget != BuildTarget.iOS) return;
+
         string projectPath = PBXProject.GetPBXProjectPath(path);
 
         PBXProject pbxProject = new PBXProject();
@@ -37,28 +73,13 @@ public class MyBuildPostprocessor : IPreprocessBuildWithReport
         var plist = new PlistDocument();
         plist.ReadFromFile(plistPath);
 
-        //日付とか
-        string dateName = DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2");
-        string timeName = DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2");
-
-        if (Debug.isDebugBuild)
-        {
-            //アプリ名
-            plist.root.SetString("CFBundleDisplayName", $"{dateName}_debug");
-
-            //bundleId
-            pbxProject.SetBuildProperty(target, "PRODUCT_BUNDLE_IDENTIFIER", Application.identifier + ".dev");
-        }
-
-        //ipa名
-        string buildMode = Debug.isDebugBuild ? "debug" : "release";
-        string name = $"{Application.productName}_{buildMode}_ver{Application.version}_{dateName}_{timeName}";
-        // Debug.Log($"~~~~~~~~~~~~~~~\n{name}\n~~~~~~~~~~~~~~~");
-
         plist.WriteToFile(plistPath);
         pbxProject.WriteToFile(projectPath);
     }
 
-
+    static void Android(BuildTarget buildTarget, string path)
+    {
+        if (buildTarget != BuildTarget.Android) return;
+        // https://qiita.com/ckazu/items/07dff39449e9f544b038
+    }
 }
-#endif
